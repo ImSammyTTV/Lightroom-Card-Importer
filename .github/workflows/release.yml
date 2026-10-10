@@ -1,0 +1,71 @@
+name: release
+
+# Push a tag like v1.1.0 to build both apps and publish a GitHub release.
+# The apps update themselves from the latest release, so the tag must match the version inside them.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build CardImporter.exe
+        shell: pwsh
+        run: ./windows/build.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CardImporter-windows
+          path: windows/CardImporter.exe
+
+  mac:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build CardImporter.app
+        run: ./mac/build.sh
+      - name: Zip app
+        run: cd mac && ditto -c -k --keepParent CardImporter.app CardImporter-mac.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CardImporter-mac
+          path: mac/CardImporter-mac.zip
+
+  publish:
+    needs: [windows, mac]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the tag matches the app versions
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          W=$(grep -oP 'AppVersion = "\K[^"]+' windows/CardImporter.cs)
+          M=$(grep -oP '^VERSION="\K[^"]+' mac/build.sh)
+          echo "tag=$TAG windows=$W mac=$M"
+          if [ "$TAG" != "$W" ] || [ "$TAG" != "$M" ]; then
+            echo "::error::The tag must match AppVersion in windows/CardImporter.cs and VERSION in mac/build.sh"
+            exit 1
+          fi
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums and release notes
+        run: |
+          cd dist
+          sha256sum CardImporter.exe CardImporter-mac.zip > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          cd ..
+          awk -v ver="$GITHUB_REF_NAME" '/^## /{p=($2==ver); next} p' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then echo "See the README for setup." > notes.md; fi
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/CardImporter.exe dist/CardImporter-mac.zip dist/SHA256SUMS.txt \
+            --title "Card Importer $GITHUB_REF_NAME" --notes-file notes.md

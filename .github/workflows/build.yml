@@ -1,0 +1,32 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build CardImporter.exe
+        shell: pwsh
+        run: ./windows/build.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CardImporter-windows
+          path: windows/CardImporter.exe
+
+  mac:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build CardImporter.app
+        run: ./mac/build.sh
+      - name: Zip app
+        run: cd mac && ditto -c -k --keepParent CardImporter.app CardImporter-mac.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CardImporter-mac
+          path: mac/CardImporter-mac.zip

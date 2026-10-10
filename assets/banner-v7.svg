@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 344" width="1280" height="344" role="img" aria-label="Card Importer: plug in the card and your photos land in the right folder, ready for Lightroom Classic">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12141a"/>
+      <stop offset="1" stop-color="#1c2740"/>
+    </linearGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2684ff"/>
+      <stop offset="1" stop-color="#143c96"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.18" cy="0.5" r="0.6">
+      <stop offset="0" stop-color="#2684ff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#2684ff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="barclip"><rect x="344" y="272" width="844" height="7" rx="3.5"/></clipPath>
+  </defs>
+  <rect width="1280" height="344" rx="18" fill="url(#bg)"/>
+  <rect width="1280" height="344" rx="18" fill="url(#glow)"/>
+
+  <!-- Everything sits in one block with equal margins: 70 px left and right, 55 px top and bottom. -->
+
+  <!-- app icon (centred on the block) -->
+  <g transform="translate(70,72)">
+    <rect width="200" height="200" rx="44" fill="url(#tile)"/>
+    <polygon points="50,25 120,25 150,56 150,144 50,144" fill="#ffffff"/>
+    <g fill="#ebb432">
+      <rect x="62" y="34" width="11" height="28" rx="1"/>
+      <rect x="81" y="34" width="11" height="28" rx="1"/>
+      <rect x="100" y="34" width="11" height="28" rx="1"/>
+      <rect x="119" y="34" width="11" height="28" rx="1" transform="translate(-2,0)"/>
+    </g>
+    <polygon points="84,82 116,82 116,109 134,109 100,141 66,109 84,109" fill="#28c86e"/>
+    <rect x="44" y="166" width="112" height="12" rx="3" fill="#ffffff"/>
+  </g>
+
+  <text x="320" y="104" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="68" font-weight="700" fill="#ffffff">Card Importer</text>
+  <text x="322" y="154" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="28" fill="#9fb4d8">Plug in the card. Photos land in the right folder.</text>
+  <text x="322" y="194" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="28" fill="#9fb4d8">Lightroom Classic picks them up. No import dialog.</text>
+
+  <!-- status box: a whole import, looping (fills up, turns green when done, then starts again) -->
+  <rect x="322" y="214" width="888" height="74" rx="18" fill="#080b12" fill-opacity="0.82" stroke="#2c3a63"/>
+  <circle cx="346" cy="232" r="5" fill="#28c86e">
+    <animate attributeName="opacity" values="1;0.35;1" dur="1.6s" repeatCount="indefinite"/>
+  </circle>
+  <text x="360" y="237" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" letter-spacing="1" fill="#8e9ec4">IMPORTING  ·  F:  SONY_A7IV</text>
+
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="21" font-weight="600" fill="#ffffff">
+    <text x="344" y="262" opacity="1">Copying 42 of 218  ·  DSC01547.ARW
+      <animate attributeName="opacity" dur="8s" repeatCount="indefinite" calcMode="discrete" values="1;1;0;0" keyTimes="0;0.34;0.35;1"/>
+    </text>
+    <text x="344" y="262" opacity="0">Verifying and clearing the card  ·  120 of 218
+      <animate attributeName="opacity" dur="8s" repeatCount="indefinite" calcMode="discrete" values="0;0;1;1;0;0" keyTimes="0;0.34;0.35;0.69;0.7;1"/>
+    </text>
+    <text x="344" y="262" opacity="0" fill="#5be39b">Done  ·  218 files imported, card cleared
+      <animate attributeName="opacity" dur="8s" repeatCount="indefinite" calcMode="discrete" values="0;0;1;1" keyTimes="0;0.7;0.71;1"/>
+    </text>
+  </g>
+
+  <rect x="344" y="272" width="844" height="7" rx="3.5" fill="#ffffff" fill-opacity="0.13"/>
+  <g clip-path="url(#barclip)">
+    <rect x="344" y="272" width="300" height="7" fill="#2684ff">
+      <animate attributeName="width" dur="8s" repeatCount="indefinite" values="0;844;844;844" keyTimes="0;0.69;0.94;1"/>
+      <animate attributeName="fill" dur="8s" repeatCount="indefinite" values="#2684ff;#2684ff;#28c86e;#28c86e" keyTimes="0;0.69;0.72;1"/>
+    </rect>
+    <!-- soft highlight sweeping along the bar while it fills -->
+    <rect x="284" y="272" width="120" height="7" fill="#ffffff" fill-opacity="0.22">
+      <animate attributeName="x" dur="8s" repeatCount="indefinite" values="284;1130;1130;284" keyTimes="0;0.69;0.94;1"/>
+      <animate attributeName="fill-opacity" dur="8s" repeatCount="indefinite" values="0.22;0.22;0;0" keyTimes="0;0.66;0.7;1"/>
+    </rect>
+  </g>
+</svg>

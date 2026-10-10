@@ -1,0 +1,5 @@
+*.exe
+*.zip
+mac/.build/
+mac/*.app/
+windows/icon-preview.png
