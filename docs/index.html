@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Card Importer</title>
+<meta name="description" content="Plug in your camera or drone card and your photos land in the right folder, ready for Lightroom Classic.">
+<style>
+:root{--bg:#fff;--text:#1d1d1f;--muted:#6e6e73;--blue:#0a7aff;--green:#28a745;--line:rgba(0,0,0,.1);--fill:rgba(0,0,0,.05);--pop:rgba(248,248,250,.85);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1c1e;--text:#f5f5f7;--muted:#98989d;--blue:#0a84ff;--green:#30d158;--line:rgba(255,255,255,.14);--fill:rgba(255,255,255,.08);--pop:rgba(48,48,52,.8)}}
+:root[data-theme="dark"]{--bg:#1c1c1e;--text:#f5f5f7;--muted:#98989d;--blue:#0a84ff;--green:#30d158;--line:rgba(255,255,255,.14);--fill:rgba(255,255,255,.08);--pop:rgba(48,48,52,.8)}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-align:center}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--blue) 60%,transparent);outline-offset:3px;border-radius:8px}
+main{max-width:860px;margin:0 auto;padding:72px 22px 40px}
+.icon{width:96px;height:96px;border-radius:22px;margin:0 auto 24px;background:linear-gradient(160deg,#4da3ff,#0a5fd8);display:grid;place-items:center;box-shadow:0 12px 30px rgba(10,95,216,.35)}
+h1{font-size:clamp(40px,7vw,64px);letter-spacing:-.03em;line-height:1.05;margin:0 0 12px}
+.tag{font-size:clamp(19px,2.6vw,24px);color:var(--muted);max-width:26em;margin:0 auto 28px;line-height:1.35}
+.btn{display:inline-block;background:var(--blue);color:#fff;border-radius:980px;padding:11px 26px;font-size:17px;font-weight:500}.btn:hover{text-decoration:none;filter:brightness(1.08)}
+.fine{font-size:14px;color:var(--muted);margin:14px 0 0}
+.stage{margin:48px auto 0;border-radius:20px;padding:56px 20px 36px;background:radial-gradient(600px 360px at 10% 0,#7ab8ff,transparent 60%),radial-gradient(500px 360px at 95% 10%,#b58cff,transparent 60%),radial-gradient(600px 400px at 60% 110%,#ff9ec4,transparent 60%),#3b6fd8;position:relative;overflow:hidden}
+.mb{position:absolute;top:0;left:0;right:0;height:26px;background:rgba(20,20,30,.3);display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:0 14px;color:#fff;font-size:12px}
+.pop{width:320px;max-width:100%;margin:0 auto;text-align:left;border-radius:14px;padding:14px;font-size:13px;background:var(--pop);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:12px}.ph b{font-size:14px}.ph small{display:block;color:var(--muted);font-size:12px}
+.mini{width:30px;height:30px;border-radius:8px;background:linear-gradient(160deg,#4da3ff,#0a5fd8);display:grid;place-items:center}
+.bar{height:6px;border-radius:3px;background:var(--fill);overflow:hidden;margin-bottom:8px}.bar i{display:block;height:100%;width:100%;background:var(--green)}
+ul.f{list-style:none;margin:0;padding:0}ul.f li{display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid var(--line);color:var(--muted)}ul.f li:first-child{border-top:0}ul.f li span:first-child{color:var(--text)}
+.sub{position:relative;height:16px}.sub span{position:absolute;left:0;top:0;white-space:nowrap}.sub .a{opacity:0}
+@keyframes fill{0%,4%{width:0;background:var(--blue)}56%{width:100%;background:var(--blue)}60%,94%{width:100%;background:var(--green)}98%,100%{width:0;background:var(--green)}}
+@keyframes ta{0%{opacity:0}4%,54%{opacity:1}58%,100%{opacity:0}}
+@keyframes tb{0%,58%{opacity:0}62%,94%{opacity:1}98%,100%{opacity:0}}
+@keyframes r1{0%,7%{opacity:0;transform:translateY(5px)}10%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+@keyframes r2{0%,21%{opacity:0;transform:translateY(5px)}24%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+@keyframes r3{0%,35%{opacity:0;transform:translateY(5px)}38%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+@keyframes r4{0%,59%{opacity:0;transform:translateY(5px)}62%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+@media(prefers-reduced-motion:no-preference){.bar i{animation:fill 10s ease-in-out infinite}.sub .a{animation:ta 10s infinite}.sub .b{animation:tb 10s infinite}ul.f li:nth-child(1){animation:r1 10s infinite}ul.f li:nth-child(2){animation:r2 10s infinite}ul.f li:nth-child(3){animation:r3 10s infinite}ul.f li:nth-child(4){animation:r4 10s infinite}}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin:64px 0 0;text-align:left}
+.three h2{font-size:17px;margin:0 0 4px}.three p{margin:0;color:var(--muted);font-size:15px;line-height:1.45}
+footer{padding:28px 22px 44px;font-size:13px;color:var(--muted)}footer a{color:var(--muted);margin:0 8px}
+@media(max-width:700px){.three{grid-template-columns:1fr;gap:22px;text-align:center}main{padding-top:48px}}
+</style>
+</head>
+<body>
+<main>
+<div class="icon"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><path d="M6 2h9l4 4v16H6z"/><path d="M10 2v5M13 2v5"/></svg></div>
+<h1>Card Importer</h1>
+<p class="tag">Plug in your camera or drone card. Your photos land in the right folder, ready for Lightroom Classic.</p>
+<a class="btn" id="dl" href="https://github.com/ImSammyTTV/lightroom-card-importer/releases/latest">Download for Mac</a>
+<p class="fine" id="alt">Also for <a href="https://github.com/ImSammyTTV/lightroom-card-importer/releases/latest">Windows</a>. Free and open source.</p>
+
+<div class="stage" aria-label="Card Importer window after an import">
+<div class="mb"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M6 2h9l4 4v16H6z"/><path d="M10 2v5M13 2v5"/></svg><span>Tue 9:41 AM</span></div>
+<div class="pop">
+<div class="ph"><span class="mini"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"><path d="M6 2h9l4 4v16H6z"/><path d="M10 2v5M13 2v5"/></svg></span><div><b>Card Importer</b><small class="sub"><span class="a">Importing 24 files…</span><span class="b">24 files imported</span></small></div></div>
+<div class="bar"><i></i></div>
+<ul class="f"><li><span>DSC04127.ARW</span><span>Verified</span></li><li><span>DSC04128.ARW</span><span>Verified</span></li><li><span>DJI_0412.MP4</span><span>Verified</span></li><li><span>Photos/2026/2026-10-06/</span><span></span></li></ul>
+</div>
+</div>
+
+<div class="three">
+<div><h2>Sorted by date</h2><p>Files go into folders like <code>2026-10-06</code> by capture date.</p></div>
+<div><h2>Every copy checked</h2><p>Each file is verified before anything is deleted from the card.</p></div>
+<div><h2>Straight into Lightroom</h2><p>A small plugin adds new photos to your catalog by itself.</p></div>
+</div>
+</main>
+<footer><a href="https://github.com/ImSammyTTV/Lightroom-Card-Importer">GitHub</a><a href="https://github.com/ImSammyTTV/Lightroom-Card-Importer#readme">Docs</a><a href="https://github.com/ImSammyTTV/lightroom-card-importer/issues/new">Report a bug</a></footer>
+<script>
+(function(){
+var u=navigator.userAgent,p=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||"",
+mobile=/iphone|ipad|ipod|android/i.test(u)||(/mac/i.test(p)&&navigator.maxTouchPoints>1),
+b=document.getElementById("dl"),a=document.getElementById("alt"),
+rel="https://github.com/ImSammyTTV/lightroom-card-importer/releases/latest";
+if(mobile){b.textContent="Download";a.textContent="Available for Mac and Windows. Free and open source."}
+else if(/win/i.test(p)||/windows/i.test(u)){b.textContent="Download for Windows";a.innerHTML='Also for <a href="'+rel+'">Mac</a>. Free and open source.'}
+})();
+</script>
+</body>
+</html>
